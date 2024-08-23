@@ -5,8 +5,8 @@ static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
+static const char *fonts[]          = { "mononoki:size=10" };
+static const char dmenufont[]       = "mononoki:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -22,13 +22,9 @@ static const char *colors[][3]      = {
 static const char *tags[] = { "I", "II", "III", "IV" };
 
 static const Rule rules[] = {
-	/* xprop(1):
-	 *	WM_CLASS(STRING) = instance, class
-	 *	WM_NAME(STRING) = title
-	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Surf",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "Surf",     NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
 /* layout(s) */
@@ -59,12 +55,30 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
+static const char *screenshotcmd[] = { "screenshot.sh", NULL };
+static const char *volctlcmd[] = { "volume-control.sh", NULL };
+static const char *touchpadcmd[] = { "toggleTouchpad.sh", NULL };
+static const char *keyboardcmd[] = { "toggleKeyboard.sh", NULL };
 
+/* Function prototypes */
+void battery(void);
+void clock(void);
+
+/* key bindings */
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_x,      spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	{ MODKEY|ShiftMask,             XK_X,      spawn,          {.v = (const char*[]){ "tabbed", "-r", "2", "st", "-w", "", NULL } } },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = screenshotcmd } },
+	{ MODKEY|ShiftMask,             XK_i,      spawn,          {.v = (const char*[]){ volctlcmd[0], "increase", NULL } } },
+	{ MODKEY|ShiftMask,             XK_d,      spawn,          {.v = (const char*[]){ volctlcmd[0], "decrease", NULL } } },
+	{ MODKEY|ShiftMask,             XK_m,      spawn,          {.v = (const char*[]){ volctlcmd[0], "mute", NULL } } },
+	{ MODKEY|ShiftMask,             XK_8,      spawn,          {.v = touchpadcmd } },
+	{ MODKEY|ShiftMask,             XK_7,      spawn,          {.v = keyboardcmd } },
+	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY|Mod1Mask,              XK_q,      quit,           {0} },
+	{ MODKEY|ShiftMask,             XK_r,      restart,        {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
@@ -94,11 +108,9 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 };
 
 /* button definitions */
-/* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static const Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
@@ -114,3 +126,13 @@ static const Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
 
+/* status bar functions */
+void
+battery(void) {
+	/* Battery status function here */
+}
+
+void
+clock(void) {
+	/* Clock function here */
+}
