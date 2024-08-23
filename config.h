@@ -56,29 +56,24 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 static const char *screenshotcmd[] = { "screenshot.sh", NULL };
-static const char *volctlcmd[] = { "volume-control.sh", NULL };
+static const char *volupcmd[] = { "volume-control.sh", "increase", NULL };
+static const char *voldowncmd[] = { "volume-control.sh", "decrease", NULL };
+static const char *volmutecmd[] = { "volume-control.sh", "mute", NULL };
 static const char *touchpadcmd[] = { "toggleTouchpad.sh", NULL };
 static const char *keyboardcmd[] = { "toggleKeyboard.sh", NULL };
-
-/* Function prototypes */
-void battery(void);
-void clock(void);
 
 /* key bindings */
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_x,      spawn,          {.v = termcmd } },
-	{ MODKEY|ShiftMask,             XK_X,      spawn,          {.v = (const char*[]){ "tabbed", "-r", "2", "st", "-w", "", NULL } } },
+	{ MODKEY|ShiftMask,             XK_X,      spawn,          SHCMD("tabbed -r 2 st -w ''") },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = screenshotcmd } },
-	{ MODKEY|ShiftMask,             XK_i,      spawn,          {.v = (const char*[]){ volctlcmd[0], "increase", NULL } } },
-	{ MODKEY|ShiftMask,             XK_d,      spawn,          {.v = (const char*[]){ volctlcmd[0], "decrease", NULL } } },
-	{ MODKEY|ShiftMask,             XK_m,      spawn,          {.v = (const char*[]){ volctlcmd[0], "mute", NULL } } },
+	{ MODKEY|ShiftMask,             XK_i,      spawn,          {.v = volupcmd } },
+	{ MODKEY|ShiftMask,             XK_d,      spawn,          {.v = voldowncmd } },
+	{ MODKEY|ShiftMask,             XK_m,      spawn,          {.v = volmutecmd } },
 	{ MODKEY|ShiftMask,             XK_8,      spawn,          {.v = touchpadcmd } },
 	{ MODKEY|ShiftMask,             XK_7,      spawn,          {.v = keyboardcmd } },
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ MODKEY|Mod1Mask,              XK_q,      quit,           {0} },
-	{ MODKEY|ShiftMask,             XK_r,      restart,        {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
@@ -108,6 +103,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
+	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 };
 
 /* button definitions */
@@ -136,3 +132,4 @@ void
 clock(void) {
 	/* Clock function here */
 }
+
