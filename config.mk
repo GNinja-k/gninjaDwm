@@ -25,15 +25,15 @@ FREETYPEINC = /usr/include/freetype2
 INCS = -I${X11INC} -I${FREETYPEINC}
 LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS}
 
-# flags
-CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
-#CFLAGS   = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
-CFLAGS   = -std=c99 -pedantic -Wall -Wno-deprecated-declarations -Os ${INCS} ${CPPFLAGS}
-LDFLAGS  = ${LIBS}
+# flags from make.conf
+BASE_FLAGS = -march=znver1 -O3
+LTO_FLAGS = -flto
+GRAPHITE_FLAGS = -fgraphite-identity -floop-nest-optimize
 
-# Solaris
-#CFLAGS = -fast ${INCS} -DVERSION=\"${VERSION}\"
-#LDFLAGS = ${LIBS}
+# compiler flags
+CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
+CFLAGS   = ${BASE_FLAGS} ${LTO_FLAGS} ${GRAPHITE_FLAGS} ${INCS} ${CPPFLAGS}
+LDFLAGS  = ${LTO_FLAGS} ${LIBS}
 
 # compiler and linker
-CC = cc
+CC = gcc
